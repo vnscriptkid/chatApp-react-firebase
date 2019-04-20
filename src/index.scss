@@ -134,10 +134,12 @@ body {
   flex-direction: column;
   padding: 1rem 1rem;
   overflow: auto; 
+  flex: 1;
 }
 
 .messageItem {
   margin-bottom: .5rem;
+  display: flex;
   
   &__userImg {
     height: 50px;
@@ -161,4 +163,5 @@ body {
   border-radius: 5px;
   padding: .5rem;
   margin: 1rem;
+  outline: none;
 }
