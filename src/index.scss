@@ -4,8 +4,17 @@
   box-sizing: border-box;
 }
 
+button {
+  outline: none;
+  cursor: pointer;
+}
+
 .text-center {
   text-align: center;
+}
+
+a {
+  text-decoration: none;
 }
 
 $borderColor: lighten(black, 85%);
@@ -74,12 +83,15 @@ body {
 
 // channelList
 .channelList {
-  margin-top: 1rem;
+  // margin-top: 1rem;
+  padding: 1rem;
 }
 
 .channelItem {
   padding: .5rem;
   cursor: pointer;
+  display: block;
+  color: white;
   
   &--active {
     background: orangered;
@@ -125,7 +137,7 @@ body {
 
 .channelSubInfo {
   color: lighten(blue, 20%);
-  padding: .5rem 0;
+  margin-bottom: 1rem;
 }
 
 // messages
@@ -138,12 +150,13 @@ body {
 }
 
 .messageItem {
-  margin-bottom: .5rem;
+  margin-top: .5rem;
   display: flex;
   
   &__userImg {
-    height: 50px;
-    width: 50px;
+    height: 35px;
+    width: 35px;
+    border-radius: 5px;
     float: left;
     margin-right: .5rem;
   }
@@ -156,12 +169,65 @@ body {
   &__time {
     color: lighten(black, 60%);
   }
+
+  &__textOnly {
+    margin-left: calc(.5rem + 35px);
+  }
 }
 
 .messageInput {
-  border: 1px solid lighten(black, 50%);
+  // border: 1px solid lighten(black, 50%);
+  border: 3px solid orangered; 
   border-radius: 5px;
   padding: .5rem;
-  margin: 1rem;
   outline: none;
+  width: 100%;
+}
+
+.messageInputBox {
+  padding: 1rem;
+}
+
+.login {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  
+  &__title {
+    margin-bottom: 1rem;
+  }
+
+  &__btn {
+    padding: .5rem 2rem;
+    font-size: 1.5rem;
+    background-color: lighten(green, 5%);
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+
+  &__warning {
+    color: red;
+    font-weight: bold;
+    margin-top: 1rem;
+    font-size: 1.5rem;
+  }  
+}
+
+.dayinfo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  &__line {
+    flex: 1;
+    height: 1px;
+    background-color: $borderColor;
+  }
+
+  &__text {
+    font-weight: bold;
+  }
 }
