@@ -1,7 +1,9 @@
 // import firebase from 'firebase/app';
-import "firebase/firestore";
-import "firebase/database";
-import "firebase/auth";
+import {
+  getFirestore,
+  serverTimestamp as firestoreServerTimestamp,
+} from "firebase/firestore";
+import { getDatabase, serverTimestamp } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
 // var config = {
@@ -24,9 +26,11 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+// const firestoreApp = initializeFirestore(app);
 
-const db = firebase.firestore();
-const rtdb = firebase.database();
+const db = getFirestore(app);
+
+const rtdb = getDatabase(app);
 
 function setupPresence(loggedInUser) {
   const statusRef = rtdb.ref(`state/${loggedInUser.id}`);
@@ -36,19 +40,19 @@ function setupPresence(loggedInUser) {
     const isOnline = snapshot.val();
     const online = {
       status: true,
-      lastChanged: firebase.database.ServerValue.TIMESTAMP,
+      lastChanged: serverTimestamp(),
     };
     const offline = {
       status: false,
-      lastChanged: firebase.database.ServerValue.TIMESTAMP,
+      lastChanged: serverTimestamp(),
     };
     const onlineForFirestore = {
       status: true,
-      lastChanged: firebase.firestore.FieldValue.TIMESTAMP,
+      lastChanged: firestoreServerTimestamp(),
     };
     const offlineForFirestore = {
       status: true,
-      lastChanged: firebase.firestore.FieldValue.TIMESTAMP,
+      lastChanged: firestoreServerTimestamp(),
     };
     if (isOnline) {
       // tell firebase in advance (when you are online), in case you are off, set this data for the ref
@@ -66,4 +70,4 @@ function setupPresence(loggedInUser) {
   });
 }
 
-export { db, rtdb, firebase, setupPresence };
+export { db, rtdb, setupPresence };
