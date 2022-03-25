@@ -1,8 +1,11 @@
-import { collection, onSnapshot } from "@firebase/firestore";
+import { getAuth, onAuthStateChanged } from "@firebase/auth";
+import { collection, doc, onSnapshot, setDoc } from "@firebase/firestore";
 import { useEffect, useState } from "react";
-import { db } from "./firebase";
+import { db, setupPresence } from "./firebase";
 
-function subscribeCollection(path, orderByValue, query = []) {
+const auth = getAuth();
+
+export function subscribeCollection(path, orderByValue, query = []) {
   const [list, setList] = useState([]);
   const [prop, operator, value] = query;
 
@@ -16,11 +19,68 @@ function subscribeCollection(path, orderByValue, query = []) {
       snapshot.docs.forEach((doc) => docs.push({ ...doc.data(), id: doc.id }));
       setList(docs);
     });
-    return function () {
-      unsubscribe();
-    };
+
+    return () => unsubscribe();
   }, [path, orderByValue, prop, operator, value]);
+
   return list;
+}
+
+export function subscribeUserStateChange() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    return onAuthStateChanged(auth, async function (user) {
+      if (user) {
+        // User is signed in.
+        const signedInUser = {
+          name: user.displayName,
+          id: user.uid,
+          img: user.photoURL,
+        };
+        setUser(signedInUser);
+        // add logged user to db
+        const usersRef = collection(db, "users");
+
+        try {
+          await setDoc(
+            doc(usersRef, user.uid),
+            {
+              name: user.displayName,
+              img: user.photoURL,
+            },
+            { merge: true }
+          );
+
+          console.log("setupPresence for user: ", signedInUser);
+          setupPresence(signedInUser);
+        } catch (err) {
+          console.error(err);
+        }
+
+        // collection(db, "users")
+        //   .doc(user.uid)
+        //   .set(
+        //     {
+        //       name: user.displayName,
+        //       img: user.photoURL,
+        //     },
+        //     { merge: true }
+        //   )
+        //   // .then(() => console.log('Update logged user to db'))
+        //   .then(
+        //     () =>
+        //       console.log("setupPresence for user: ", signedInUser) ||
+        //       setupPresence(signedInUser)
+        //   )
+        //   .catch((err) => console.error(err));
+      } else {
+        // No user is signed in.
+        setUser(null);
+      }
+    });
+  }, []);
+  return user;
 }
 
 const cache = {};
@@ -29,7 +89,7 @@ const pendingCache = {};
 window.pendingCache = pendingCache;
 // cache[path]
 
-function subscribeDoc(path) {
+export function subscribeDoc(path) {
   // console.log('subscribeDoc', path);
   const [doc, setDoc] = useState(cache[path]);
 
@@ -65,5 +125,3 @@ function subscribeDoc(path) {
 
   return doc;
 }
-
-export { subscribeCollection, subscribeDoc };
