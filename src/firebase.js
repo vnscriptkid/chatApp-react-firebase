@@ -33,6 +33,7 @@ const db = getFirestore(app);
 const rtdb = getDatabase(app);
 
 function setupPresence(loggedInUser) {
+  console.log("@@ setupPresence for user: ", loggedInUser);
   const statusRef = rtdb.ref(`state/${loggedInUser.id}`);
   const userDoc = db.doc(`users/${loggedInUser.id}`);
 

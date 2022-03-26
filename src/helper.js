@@ -40,20 +40,20 @@ export function subscribeCollection(path, orderByValue, queryInput = []) {
   return list;
 }
 
+/* Keep user logged in between sessions */
 export function subscribeUserStateChange() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     return onAuthStateChanged(auth, async function (user) {
       if (user) {
-        // User is signed in.
         const signedInUser = {
           name: user.displayName,
           id: user.uid,
           img: user.photoURL,
         };
         setUser(signedInUser);
-        // add logged user to db
+
         const usersRef = collection(db, "users");
 
         try {
@@ -66,30 +66,11 @@ export function subscribeUserStateChange() {
             { merge: true }
           );
 
-          console.log("setupPresence for user: ", signedInUser);
           setupPresence(signedInUser);
         } catch (err) {
           console.error(err);
         }
-
-        // collection(db, "users")
-        //   .doc(user.uid)
-        //   .set(
-        //     {
-        //       name: user.displayName,
-        //       img: user.photoURL,
-        //     },
-        //     { merge: true }
-        //   )
-        //   // .then(() => console.log('Update logged user to db'))
-        //   .then(
-        //     () =>
-        //       console.log("setupPresence for user: ", signedInUser) ||
-        //       setupPresence(signedInUser)
-        //   )
-        //   .catch((err) => console.error(err));
       } else {
-        // No user is signed in.
         setUser(null);
       }
     });

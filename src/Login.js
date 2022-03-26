@@ -1,5 +1,5 @@
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "@firebase/auth";
 import React, { useState } from "react";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "@firebase/auth";
 
 const auth = getAuth();
 
@@ -8,8 +8,7 @@ export function Login() {
 
   const handleSignIn = async () => {
     try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      await signInWithPopup(auth, new GoogleAuthProvider());
     } catch (error) {
       setErr(error.message);
     }
