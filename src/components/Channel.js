@@ -22,7 +22,7 @@ function Channel({ user, channelId }) {
   return (
     <Fragment>
       <div className="mainBody">
-        <ChannelInfo />
+        <ChannelInfo channelId={channelId} />
 
         <MessageList channelId={channelId} />
 
