@@ -56,6 +56,7 @@ export function subscribeUserStateChange() {
 
         const usersRef = collection(db, "users");
 
+        /* Add user to `users/user-id` */
         try {
           await setDoc(
             doc(usersRef, user.uid),
