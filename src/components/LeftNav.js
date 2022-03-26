@@ -2,7 +2,7 @@ import { subscribeCollection } from "../helper";
 import React from "react";
 // import {firebase, rtdb} from '../firebase';
 import { Link } from "@reach/router";
-import { signOut } from "firebase/auth";
+import { signOut, getAuth } from "firebase/auth";
 
 function LeftNav({ user }) {
   const channels = subscribeCollection("channels");
@@ -11,7 +11,7 @@ function LeftNav({ user }) {
     e.preventDefault();
     try {
       // await firebase.auth().signOut()
-      await signOut();
+      await signOut(getAuth());
     } catch (err) {
       console.error(err);
     }
