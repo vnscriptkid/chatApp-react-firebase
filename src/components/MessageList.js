@@ -1,4 +1,4 @@
-import { subscribeCollection, subscribeDoc } from "../helper";
+import { subscribeCollection, useDocWithCache } from "../helper";
 import React, { Fragment, useRef, useEffect } from "react";
 import { format } from "date-fns";
 
@@ -84,7 +84,7 @@ const DateLine = ({ timestamp }) => (
 );
 
 function MessageWithInfo({ msg }) {
-  const user = subscribeDoc("users", msg.userRef.id);
+  const user = useDocWithCache("users", msg.userRef.id);
 
   return (
     <div className="messageItem">

@@ -84,7 +84,7 @@ window.cache = cache;
 const pendingCache = {};
 window.pendingCache = pendingCache;
 
-export function subscribeDoc(collection, docId) {
+export function useDocWithCache(collection, docId) {
   const path = `${collection}/${docId}`;
 
   const [docData, setDocData] = useState(cache[path]);
@@ -92,14 +92,18 @@ export function subscribeDoc(collection, docId) {
   useEffect(() => {
     if (docData) return;
 
+    /* Handle case when component is unmounted before res comes back */
     let stillMounted = true;
 
-    getDoc(doc(db, collection, docId))
+    const promise = pendingCache[path] || getDoc(doc(db, collection, docId));
+
+    promise
       .then((result) => {
         if (stillMounted) {
           const newDoc = { ...result.data(), id: result.id };
           setDocData(newDoc);
           cache[path] = newDoc;
+          if (path in pendingCache) delete pendingCache[path];
         }
       })
       .catch((err) => console.error(err));
@@ -107,6 +111,23 @@ export function subscribeDoc(collection, docId) {
     return () => {
       stillMounted = false;
     };
+  }, [path]);
+
+  return docData;
+}
+
+export function subscribeDoc(collection, docId) {
+  const path = `${collection}/${docId}`;
+
+  const [docData, setDocData] = useState(null);
+
+  useEffect(() => {
+    const docRef = doc(db, collection, docId);
+
+    return onSnapshot(docRef, (newDoc) => {
+      const newValues = { ...newDoc.data(), id: newDoc.id };
+      setDocData(newValues);
+    });
   }, [path]);
 
   return docData;
