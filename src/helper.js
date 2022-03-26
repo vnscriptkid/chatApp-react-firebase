@@ -1,20 +1,34 @@
 import { getAuth, onAuthStateChanged } from "@firebase/auth";
-import { collection, doc, onSnapshot, setDoc } from "@firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  setDoc,
+  where,
+  query,
+  getDoc,
+} from "@firebase/firestore";
 import { useEffect, useState } from "react";
 import { db, setupPresence } from "./firebase";
 
 const auth = getAuth();
 
-export function subscribeCollection(path, orderByValue, query = []) {
+export function subscribeCollection(path, orderByValue, queryInput = []) {
   const [list, setList] = useState([]);
-  const [prop, operator, value] = query;
+  const [prop, operator, value] = queryInput;
 
   useEffect(() => {
     let ref = collection(db, path);
-    ref = orderByValue ? ref.orderBy(orderByValue) : ref;
-    ref = prop ? ref.where(prop, operator, value) : ref;
 
-    const unsubscribe = onSnapshot(ref, (snapshot) => {
+    const constraints = [];
+
+    if (orderByValue) constraints.push(orderBy(orderByValue));
+    if (prop) constraints.push(where(prop, operator, value));
+
+    const q = query(ref, ...constraints);
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
       const docs = [];
       snapshot.docs.forEach((doc) => docs.push({ ...doc.data(), id: doc.id }));
       setList(docs);
@@ -87,32 +101,22 @@ const cache = {};
 window.cache = cache;
 const pendingCache = {};
 window.pendingCache = pendingCache;
-// cache[path]
 
-export function subscribeDoc(path) {
-  // console.log('subscribeDoc', path);
-  const [doc, setDoc] = useState(cache[path]);
+export function subscribeDoc(collection, docId) {
+  const path = `${collection}/${docId}`;
+
+  const [docData, setDocData] = useState(cache[path]);
 
   useEffect(() => {
-    if (doc) {
-      // console.log('%c user exists, no need to make more request', 'color: orange');
-      return;
-    }
+    if (docData) return;
+
     let stillMounted = true;
 
-    // const pending = pendingCache[path];
-
-    // const promise = pending || (pendingCache[path] = db.doc(path).get());
-
-    // console.log('%c useEffect', 'color: white; background: black', path);
-    // promise
-    db.doc(path)
-      .get()
+    getDoc(doc(db, collection, docId))
       .then((result) => {
         if (stillMounted) {
-          // console.log('%c useEffect got async data', 'color: red');
           const newDoc = { ...result.data(), id: result.id };
-          setDoc(newDoc);
+          setDocData(newDoc);
           cache[path] = newDoc;
         }
       })
@@ -123,5 +127,5 @@ export function subscribeDoc(path) {
     };
   }, [path]);
 
-  return doc;
+  return docData;
 }
