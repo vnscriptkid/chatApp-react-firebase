@@ -1,6 +1,5 @@
 import { subscribeCollection } from "../helper";
 import React from "react";
-// import {firebase, rtdb} from '../firebase';
 import { Link } from "@reach/router";
 import { signOut, getAuth } from "firebase/auth";
 
@@ -10,7 +9,6 @@ function LeftNav({ user }) {
   const handleSignOut = async (e) => {
     e.preventDefault();
     try {
-      // await firebase.auth().signOut()
       await signOut(getAuth());
     } catch (err) {
       console.error(err);
