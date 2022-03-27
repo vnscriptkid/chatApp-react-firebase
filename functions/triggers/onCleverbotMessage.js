@@ -5,7 +5,7 @@ const db = admin.firestore();
 
 const bot = {
   name: "cleverbot",
-  photoUrl: "https://i.imgur.com/ydOMC2c.png",
+  img: "https://i.imgur.com/ydOMC2c.png",
   uid: "cleverbot",
   status: {
     lastChanged: new Date(),
@@ -28,7 +28,7 @@ module.exports = functions.firestore
     const msgFromBot = {
       text: "hi, can i help u?",
       userRef: db.collection("users").doc("cleverbot"),
-      createdAt: new Date(),
+      createdAt: Date.now(),
     };
 
     console.log("@@ bot sending msg ", msgFromBot);
