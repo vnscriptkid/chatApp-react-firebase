@@ -16,7 +16,7 @@ const auth = getAuth();
 
 export function subscribeCollection(path, orderByValue, queryInput = []) {
   const [list, setList] = useState([]);
-  const [prop, operator, value] = queryInput;
+  const [queryField, queryOperator, queryValue] = queryInput;
 
   useEffect(() => {
     let ref = collection(db, path);
@@ -24,7 +24,8 @@ export function subscribeCollection(path, orderByValue, queryInput = []) {
     const constraints = [];
 
     if (orderByValue) constraints.push(orderBy(orderByValue));
-    if (prop) constraints.push(where(prop, operator, value));
+    if (queryField)
+      constraints.push(where(queryField, queryOperator, queryValue));
 
     const q = query(ref, ...constraints);
 
@@ -35,7 +36,7 @@ export function subscribeCollection(path, orderByValue, queryInput = []) {
     });
 
     return () => unsubscribe();
-  }, [path, orderByValue, prop, operator, value]);
+  }, [path, orderByValue, queryField, queryOperator, queryValue]);
 
   return list;
 }
