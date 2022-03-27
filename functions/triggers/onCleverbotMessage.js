@@ -33,7 +33,5 @@ module.exports = functions.firestore
 
     console.log("@@ bot sending msg ", msgFromBot);
 
-    return db
-      .collection("channels/general/messages/{messageId}")
-      .add(msgFromBot);
+    return db.collection("channels/general/messages").add(msgFromBot);
   });
