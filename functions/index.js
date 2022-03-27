@@ -28,6 +28,11 @@ exports.onUserStatusChanged = functions.database
 
       eventStatus.lastChanged = new Date(eventStatus.lastChanged);
 
+      console.log(
+        `@@ updating firestore at /users/${context.params.userId} with `,
+        eventStatus
+      );
+
       userDoc.update({
         status: eventStatus,
       });
