@@ -3,20 +3,14 @@ import Members from "./Members";
 import ChannelInfo from "./ChannelInfo";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
+import { doc, updateDoc } from "@firebase/firestore";
+import { db } from "../firebase";
 
 function Channel({ user, channelId }) {
   useEffect(() => {
-    console.log(`update channel ${channelId} for user`);
-    // db.collection("users")
-    //   .doc(user.id)
-    //   .update({
-    //     [`channels.${channelId}`]: true,
-    //   })
-    //   .then((result) => {})
-    //   .catch((err) => console.error(err));
-    return () => {
-      console.log("clean up");
-    };
+    updateDoc(doc(db, `users/${user.id}`), {
+      [`channels.${channelId}`]: true,
+    }).catch((err) => console.error(err));
   }, [channelId, user.id]);
 
   return (
