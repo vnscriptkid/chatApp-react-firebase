@@ -21,10 +21,6 @@ const Members = ({ channelId }) => {
             <span className="userItem__name">{member.name}</span>
           </div>
         ))}
-        {/* <div className="userItem">
-                <span className="userItem__status userItem__status--online"></span>
-                <span className="userItem__name">cleverbot</span>
-            </div> */}
       </div>
     </div>
   );
