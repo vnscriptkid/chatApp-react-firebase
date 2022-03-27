@@ -4,7 +4,7 @@ import { subscribeCollection } from "../helper";
 const Members = ({ channelId }) => {
   const query = [`channels.${channelId}`, "==", true];
 
-  const members = subscribeCollection("users", undefined, query);
+  const members = subscribeCollection("users", "name", query);
 
   return (
     <div className="rightNav">
