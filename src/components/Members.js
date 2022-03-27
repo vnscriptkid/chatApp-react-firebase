@@ -4,12 +4,12 @@ import { subscribeCollection } from "../helper";
 const Members = ({ channelId }) => {
   const query = [`channels.${channelId}`, "==", true];
 
-  const members = subscribeCollection("users", "name", query);
+  const members = subscribeCollection("users", undefined, query);
 
   return (
     <div className="rightNav">
       <div className="userList">
-        {members.map((member) => (
+        {members.sort(sortByName).map((member) => (
           <div key={member.id} className="userItem">
             <span
               className={
@@ -29,5 +29,9 @@ const Members = ({ channelId }) => {
     </div>
   );
 };
+
+function sortByName(a, b) {
+  return a.name > b.name ? 1 : a.name < b.name ? -1 : 0;
+}
 
 export default Members;
