@@ -1,6 +1,6 @@
 # Demo App
 
-https://chatapp-react-firebase-fffb8.firebaseapp.com/
+https://chat-app-55b89.web.app/channel/general
 
 # Tech Stack
 
