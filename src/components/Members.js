@@ -13,7 +13,7 @@ const Members = ({ channelId }) => {
           <div key={member.id} className="userItem">
             <span
               className={
-                member.status && member.status.status
+                member.status && member.status.state === "online"
                   ? "userItem__status userItem__status--online"
                   : "userItem__status"
               }
