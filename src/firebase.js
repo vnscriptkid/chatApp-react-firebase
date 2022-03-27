@@ -37,12 +37,12 @@ function setupPresence(loggedInUser) {
   const userDoc = doc(db, `users/${loggedInUser.id}`);
 
   const onlineForFirebase = {
-    status: true,
+    state: "online",
     lastChanged: serverTimestamp(),
   };
 
   const offlineForFirebase = {
-    status: false,
+    state: "offline",
     lastChanged: serverTimestamp(),
   };
   const onlineForFirestore = {
