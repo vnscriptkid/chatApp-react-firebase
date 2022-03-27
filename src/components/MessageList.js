@@ -7,23 +7,21 @@ const ChatScroller = (props) => {
   let shouldScroll = useRef(true);
 
   const handleScroll = (e) => {
-    const scrollTopFromBottom =
-      msgListRef.scrollHeight - msgListRef.clientHeight;
-    const scrollTop = Math.round(msgListRef.scrollTop);
-    const atBottom = scrollTop === scrollTopFromBottom;
+    const node = msgListRef.current;
+    const { scrollHeight, clientHeight, scrollTop } = node;
+    const atBottom = clientHeight + scrollTop >= scrollHeight;
+
     shouldScroll.current = atBottom;
   };
 
   useEffect(() => {
     if (shouldScroll.current) {
-      msgListRef.scrollTo({
-        behavior: "smooth",
-        top: msgListRef.scrollHeight,
-      });
+      const node = msgListRef.current;
+      node.scrollTop = node.scrollHeight;
     }
   });
   return (
-    <div {...props} onScroll={handleScroll} ref={(ele) => (msgListRef = ele)}>
+    <div {...props} onScroll={handleScroll} ref={msgListRef}>
       {props.children}
     </div>
   );
