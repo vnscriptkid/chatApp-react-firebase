@@ -18,9 +18,12 @@
     "eject": "react-scripts eject",
     "serve": "serve -s build",
     "serve:build": "npm run build && serve -s build",
+    "fb:serve": "firebase serve --only functions",
     "init:fb": "firebase init",
     "login:fb": "firebase login",
-    "deploy": "firebase deploy --only hosting"
+    "deploy:host": "firebase deploy --only hosting",
+    "deploy:fn": "firebase deploy --only functions",
+    "deploy": "npm run build && firebase deploy"
   },
   "eslintConfig": {
     "extends": "react-app"
